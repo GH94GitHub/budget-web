@@ -1,0 +1,11 @@
+<div fxLayout="column">
+  <mat-card style="width:40%; margin: 10% auto;">
+    <mat-card-title>{{ budget | currency }}</mat-card-title>
+
+    <mat-card-content>Budget</mat-card-content>
+    <mat-card-actions>
+      <button id="addBtn" mat-raised-button color="primary" (click)="openConfirmAmountDialog($event)">Add</button>
+      <button id="subtractBtn" mat-raised-button color="primary" (click)="openConfirmAmountDialog($event)">Subtract</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
