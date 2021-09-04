@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { inject } from '@angular/core/testing';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 
 @Component({
@@ -11,8 +12,14 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class ConfirmAmountDialogComponent implements OnInit {
 
   amountForm: FormGroup = {} as FormGroup;
+  actionMessage: string;
 
-  constructor(private dialogRef: MatDialogRef<ConfirmAmountDialogComponent>, private fb: FormBuilder) { }
+  constructor(private dialogRef: MatDialogRef<ConfirmAmountDialogComponent>,
+              private fb: FormBuilder,
+              @Inject(MAT_DIALOG_DATA) public data: {actionMessage: string})
+              {
+                this.actionMessage = data.actionMessage;
+              }
 
   ngOnInit(): void {
     this.amountForm = this.fb.group({

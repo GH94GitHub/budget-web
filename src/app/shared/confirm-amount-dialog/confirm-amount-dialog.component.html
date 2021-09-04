@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Add/Subtract from your budget</h2>
+<h2 mat-dialog-title>{{ data.actionMessage }} <span *ngIf="data.actionMessage === 'Add'">to</span><span *ngIf="data.actionMessage === 'Subtract'">from</span> your budget</h2>
 
 <mat-dialog-content [formGroup]="amountForm">
   <mat-form-field style="width: 200px;">
@@ -8,5 +8,5 @@
 
 <mat-dialog-actions align="end">
   <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-button [disabled]="!amountForm.valid" (click)="updateAmount()">Update Amount</button>
+  <button mat-button [disabled]="!amountForm.valid" (click)="updateAmount()">{{ data.actionMessage }} Amount</button>
 </mat-dialog-actions>
