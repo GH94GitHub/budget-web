@@ -31,10 +31,17 @@ export class HomeComponent implements OnInit {
   }
 
   openConfirmAmountDialog(e : any) {
+
+    let clickedAdd = e.srcElement.id === 'addBtn' || e.srcElement.offsetParent.id === 'addBtn';
+    let clickedSubtract = e.srcElement.id === 'subtractBtn' || e.srcElement.offsetParent.id === 'subtractBtn';
+
     console.log('--event--')
     console.log(e);
 
     const dialogRef = this.dialog.open(ConfirmAmountDialogComponent, {
+      data: {
+        actionMessage: clickedAdd ? 'Add' : 'Subtract'
+      },
       disableClose: true
     });
 
@@ -50,11 +57,11 @@ export class HomeComponent implements OnInit {
         console.log(data);
 
         // Add user input to budget
-        if (e.srcElement.id === 'addBtn' || e.srcElement.offsetParent.id === 'addBtn') {
+        if (clickedAdd) {
           tempBudget += Number(data.amount);
         }
         // Subtract user input from budget
-        else if(e.srcElement.id === 'subtractBtn' || e.srcElement.offsetParent.id === 'subtractBtn') {
+        else if(clickedSubtract) {
           tempBudget -= Number(data.amount)
         }
 
