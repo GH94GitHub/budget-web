@@ -13,12 +13,18 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ConfirmAmountDialogComponent } from './shared/confirm-amount-dialog/confirm-amount-dialog.component';
+import { TransactionsComponent } from './shared/transactions/transactions.component';
+import { BudgetComponent } from './pages/budget/budget.component';
+import { CalculateComponent } from './pages/calculate/calculate.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    ConfirmAmountDialogComponent
+    ConfirmAmountDialogComponent,
+    TransactionsComponent,
+    BudgetComponent,
+    CalculateComponent
   ],
   imports: [
     BrowserModule,
