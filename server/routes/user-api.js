@@ -6,12 +6,107 @@ const router = express.Router();
 const saltRounds = 10;
 
 /**
- * Creates a User TODO:
+ * Creates a User
  */
 router.post("/", async (req, res) => {
   // query username to see if user exists
+  User.findOne({ userName: req.body.userName}, (err, user) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send({
+        message: "Internal Server Error"
+      });
+    }
+    // Query went through
+    else {
+      // user exists
+      if (user) {
+        console.log("User already exists");
+        res.status(400).send({
+          message: "User already exists"
+        });
+      }
+      else {
+        // New user
+        let newUser = {
+          firstName: req.body.firstName || "",
+          lastName: req.body.lastName || "",
+          userName: req.body.userName,
+          password: bcrypt.hashSync(req.body.password, saltRounds),
+          bills: req.body.bills || [],
+          budget: req.body.budget || {}
+        }
 
-  // else create user
+        User.create(newUser, (err, user) => {
+          if (err) {
+            console.log(err);
+            res.status(500).send({
+              message: "Internal Server Error"
+            });
+          }
+          // query went through
+          else {
+            console.log(`Successfully created User: ${user}.`);
+            res.status(201).json(user);
+          }
+        });
+      }
+    }
+  });
+});
+
+/**
+ * Get user by userName
+ */
+router.get("/:userName", async (req, res) => {
+  try {
+    User.findOne({ userName: req.params.userName }, (err, user) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({
+          message: "Internal Server Error"
+        });
+      }
+      // query went through
+      else {
+        // Invalid username provided
+        if (!user) {
+          res.status(404).send({
+            message: `User ${req.params.userName} doesn't exist.`
+          });
+        }
+        else {
+          console.log(user);
+          res.status(200).json(user);
+        }
+      }
+    });
+  }
+  catch(e) {
+    console.log(e.message);
+    res.status(500).send({
+      message: "Internal Server Error"
+    });
+  }
+});
+
+/**
+ * Delete a user
+ */
+router.delete("/:userName", async (req, res) => {
+  User.deleteOne({ userName: req.params.userName}, (err, user) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send({
+        message: "Internal Server Error"
+      });
+    }
+    else {
+      res.status(200).send({
+        message: `User ${req.params.userName} was successfully deleted`
+      });
+    }
+  })
 });
 
 /**
@@ -58,11 +153,11 @@ router.get("/:userName/budget", async (req, res) => {
 /**
  * Update Budget
  */
-router.put('/:userName/budget', function (req,res) {
+router.put('/budget', function (req,res) {
 
   // Filter
   const filter = {
-    userName : req.params.userName
+    userName : req.body.userName
   }
 
   // Query

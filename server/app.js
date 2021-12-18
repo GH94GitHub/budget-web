@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path = require('path');
+
 const usersAPI = require("./routes/user-api");
+const sessionAPI = require("./routes/session-api");
 
 let app = express();
 app.use(bodyParser.json());
@@ -36,6 +38,7 @@ mongoose.connect(conn, {
  * APIs
  */
 app.use('/api/users', usersAPI)
+app.use('/api/session', sessionAPI)
 
 
 /**
