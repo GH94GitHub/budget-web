@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const decode = require('../utils/authentication');
 
 module.exports = (req, res, next) => {
@@ -17,7 +16,7 @@ module.exports = (req, res, next) => {
   catch(e) {
     console.log(e.message);
     res.status(401).send({
-      message: "Invalid Request"
+      message: e.error
     });
   }
 };
