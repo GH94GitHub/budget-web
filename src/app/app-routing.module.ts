@@ -1,4 +1,3 @@
-import { componentFactoryName } from '@angular/compiler';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { BudgetComponent } from './pages/budget/budget.component';
@@ -26,7 +25,8 @@ const routes: Routes = [
         path: 'transactions',
         component: TransactionsComponent
       }
-    ]
+    ],
+    canActivate: [AuthGuard]
   },
   {
     path: 'session',
@@ -37,6 +37,10 @@ const routes: Routes = [
         component: SigninComponent
       }
     ]
+  },
+  {
+    path: "**",
+    redirectTo: '/'
   }
 ];
 
