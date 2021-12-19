@@ -14,7 +14,7 @@ export class DesktopGuard implements CanActivate {
       console.log(`Height: ${window.innerHeight}, Width: ${window.innerWidth}.`);
       // User is on mobile
       if (window.innerWidth <= 500 && window.innerHeight <= 900) {
-        this.router.navigate(['session/mobile/signin']);
+        this.router.navigate(['session/mobile']);
         return false;
       }
       // User is on desktop

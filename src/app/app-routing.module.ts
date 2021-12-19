@@ -8,9 +8,10 @@ import { AuthGuard } from './shared/guards/auth.guard';
 import { SessionComponent } from './shared/session/session.component';
 import { TransactionsComponent } from './shared/transactions/transactions.component';
 import { DesktopGuard } from './shared/guards/desktop.guard';
-import { MobileLayoutComponent } from './shared/mobile-layout/mobile-layout.component';
 import { MobileGuard } from './shared/guards/mobile.guard';
 import { SigninMobileComponent } from './pages/signin-mobile/signin-mobile.component';
+import { SessionMobileComponent } from './shared/session-mobile/session-mobile.component';
+import { SigninMobileFormComponent } from './pages/signin-mobile-form/signin-mobile-form.component';
 
 const routes: Routes = [
   {
@@ -54,9 +55,19 @@ const routes: Routes = [
         canActivate: [DesktopGuard]
       },
       {
-        path: 'mobile/signin',
-        component: SigninMobileComponent,
-        canActivate: [MobileGuard]
+        path: 'mobile',
+        component: SessionMobileComponent,
+        canActivate: [MobileGuard],
+        children: [
+          {
+            path: '',
+            component: SigninMobileComponent
+          },
+          {
+            path: 'signin',
+            component: SigninMobileFormComponent
+          }
+        ]
       }
     ]
   },

@@ -21,6 +21,8 @@ import { SigninComponent } from './pages/signin/signin.component';
 import { SessionComponent } from './shared/session/session.component';
 import { MobileLayoutComponent } from './shared/mobile-layout/mobile-layout.component';
 import { SigninMobileComponent } from './pages/signin-mobile/signin-mobile.component';
+import { SessionMobileComponent } from './shared/session-mobile/session-mobile.component';
+import { SigninMobileFormComponent } from './pages/signin-mobile-form/signin-mobile-form.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { SigninMobileComponent } from './pages/signin-mobile/signin-mobile.compo
     SigninComponent,
     SessionComponent,
     MobileLayoutComponent,
-    SigninMobileComponent
+    SigninMobileComponent,
+    SessionMobileComponent,
+    SigninMobileFormComponent
   ],
   imports: [
     BrowserModule,

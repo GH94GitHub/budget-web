@@ -1,0 +1,16 @@
+.buttonContainer {
+  width: 100%;
+}
+.mat-raised-button {
+  margin: 10px;
+  border-radius: 15px;
+  min-width: 60%;
+}
+
+#loginButton {
+  background-color: grey;
+}
+#registerButton {
+  background-color: black;
+  color: white;
+}
