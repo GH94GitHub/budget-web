@@ -32,6 +32,7 @@ router.post("/signin", (req, res) => {
           let authenticated = bcrypt.compareSync(req.body.password, user.password);
 
           if (authenticated) {
+            console.log(`User: ${user.userName}, just signed in!`);
             // sign token
             let token = jwt.sign({
               userName: req.body.userName,
