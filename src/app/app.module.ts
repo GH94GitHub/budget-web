@@ -16,6 +16,8 @@ import { ConfirmAmountDialogComponent } from './shared/confirm-amount-dialog/con
 import { TransactionsComponent } from './shared/transactions/transactions.component';
 import { BudgetComponent } from './pages/budget/budget.component';
 import { CalculateComponent } from './pages/calculate/calculate.component';
+import { SigninComponent } from './pages/signin/signin.component';
+import { SessionComponent } from './shared/session/session.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { CalculateComponent } from './pages/calculate/calculate.component';
     ConfirmAmountDialogComponent,
     TransactionsComponent,
     BudgetComponent,
-    CalculateComponent
+    CalculateComponent,
+    SigninComponent,
+    SessionComponent
   ],
   imports: [
     BrowserModule,
