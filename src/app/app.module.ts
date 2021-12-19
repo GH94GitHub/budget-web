@@ -19,6 +19,8 @@ import { BudgetComponent } from './pages/budget/budget.component';
 import { CalculateComponent } from './pages/calculate/calculate.component';
 import { SigninComponent } from './pages/signin/signin.component';
 import { SessionComponent } from './shared/session/session.component';
+import { MobileHomeComponent } from './pages/mobile-home/mobile-home.component';
+import { MobileLayoutComponent } from './shared/mobile-layout/mobile-layout.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { SessionComponent } from './shared/session/session.component';
     BudgetComponent,
     CalculateComponent,
     SigninComponent,
-    SessionComponent
+    SessionComponent,
+    MobileHomeComponent,
+    MobileLayoutComponent
   ],
   imports: [
     BrowserModule,

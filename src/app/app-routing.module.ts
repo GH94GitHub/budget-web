@@ -8,6 +8,9 @@ import { AuthGuard } from './shared/guards/auth.guard';
 import { SessionComponent } from './shared/session/session.component';
 import { TransactionsComponent } from './shared/transactions/transactions.component';
 import { DesktopGuard } from './shared/guards/desktop.guard';
+import { MobileLayoutComponent } from './shared/mobile-layout/mobile-layout.component';
+import { MobileHomeComponent } from './pages/mobile-home/mobile-home.component';
+import { MobileGuard } from './shared/guards/mobile.guard';
 
 const routes: Routes = [
   {
@@ -33,6 +36,17 @@ const routes: Routes = [
       }
     ],
     canActivate: [AuthGuard]
+  },
+  {
+    path: "mobile",
+    component: MobileLayoutComponent,
+    children: [
+      {
+        path: "home",
+        component: MobileHomeComponent
+      }
+    ],
+    canActivate: [MobileGuard]
   },
   {
     path: 'session',
