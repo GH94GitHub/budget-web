@@ -33,7 +33,10 @@ router.post("/signin", (req, res) => {
 
           if (authenticated) {
             // sign token
-            let token = jwt.sign({ userName: req.body.userName }, config.secret, { expiresIn: "24h" });
+            let token = jwt.sign({
+              userName: req.body.userName,
+              role: user.role
+            }, config.secret, { expiresIn: "24h" });
             res.status(200).send({
               message: "Successfully signed in",
               auth: true,
