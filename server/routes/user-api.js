@@ -2,18 +2,22 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require("../models/user")
 
+// Middleware
+const isAdminUser = require("../middleware/adminAuth");
+const userAuth = require("../middleware/userAuth");
+
 const router = express.Router();
 const saltRounds = 10;
 
 /**
  * Creates a User
  */
-router.post("/", async (req, res) => {
+router.post("/", [isAdminUser], async (req, res) => {
   // query username to see if user exists
   User.findOne({ userName: req.body.userName}, (err, user) => {
     if (err) {
       console.log(err);
-      res.status(500).send({
+      return res.status(500).send({
         message: "Internal Server Error"
       });
     }
@@ -22,7 +26,7 @@ router.post("/", async (req, res) => {
       // user exists
       if (user) {
         console.log("User already exists");
-        res.status(400).send({
+        return res.status(400).send({
           message: "User already exists"
         });
       }
@@ -40,14 +44,14 @@ router.post("/", async (req, res) => {
         User.create(newUser, (err, user) => {
           if (err) {
             console.log(err);
-            res.status(500).send({
+            return res.status(500).send({
               message: "Internal Server Error"
             });
           }
           // query went through
           else {
             console.log(`Successfully created User: ${user}.`);
-            res.status(201).json(user);
+            return res.status(201).json(user);
           }
         });
       }
@@ -58,12 +62,12 @@ router.post("/", async (req, res) => {
 /**
  * Get user by userName
  */
-router.get("/:userName", async (req, res) => {
+router.get("/:userName", [userAuth], async (req, res) => {
   try {
     User.findOne({ userName: req.params.userName }, (err, user) => {
       if (err) {
         console.log(err);
-        res.status(500).send({
+        return res.status(500).send({
           message: "Internal Server Error"
         });
       }
@@ -71,38 +75,38 @@ router.get("/:userName", async (req, res) => {
       else {
         // Invalid username provided
         if (!user) {
-          res.status(404).send({
+          return res.status(404).send({
             message: `User ${req.params.userName} doesn't exist.`
           });
         }
         else {
           console.log(user);
-          res.status(200).json(user);
+          return res.status(200).send(user);
         }
       }
     });
   }
   catch(e) {
     console.log(e.message);
-    res.status(500).send({
+    return res.status(500).send({
       message: "Internal Server Error"
     });
   }
 });
 
 /**
- * Delete a user
+ * Delete a user TODO: test middleware
  */
-router.delete("/:userName", async (req, res) => {
+router.delete("/:userName", [isAdminUser], async (req, res) => {
   User.deleteOne({ userName: req.params.userName}, (err, user) => {
     if (err) {
       console.log(err);
-      res.status(500).send({
+      return res.status(500).send({
         message: "Internal Server Error"
       });
     }
     else {
-      res.status(200).send({
+      return res.status(200).send({
         message: `User ${req.params.userName} was successfully deleted`
       });
     }
@@ -110,15 +114,15 @@ router.delete("/:userName", async (req, res) => {
 });
 
 /**
- * Gets the users budget
+ * Gets the users budget TODO: test middleware
  */
-router.get("/:userName/budget", async (req, res) => {
+router.get("/:userName/budget", [userAuth], async (req, res) => {
   try {
     User.findOne({ userName: req.params.userName}, (err, user) => {
       if (err) {
         console.log('MongoDB Error')
         console.log(err);
-        res.status(500).send({
+        return res.status(500).send({
           message: 'MongoDB Error'
         })
       }
@@ -133,7 +137,7 @@ router.get("/:userName/budget", async (req, res) => {
         // User doesn't exist
         else {
           console.log("Error - User doesn't exist")
-          res.status(404).send({
+          return res.status(404).send({
             message: "User not found"
           })
         }
@@ -143,7 +147,7 @@ router.get("/:userName/budget", async (req, res) => {
   catch(e) {
     console.log('MongoDB Error')
     console.log(e);
-    res.status(500).send({
+    return res.status(500).send({
       message: 'MongoDB Error'
     })
   }
@@ -151,9 +155,9 @@ router.get("/:userName/budget", async (req, res) => {
 });
 
 /**
- * Update Budget
+ * Update Budget TODO: test middleware
  */
-router.put('/budget', function (req,res) {
+router.put('/budget', [userAuth], async (req,res) => {
 
   // Filter
   const filter = {
@@ -164,7 +168,7 @@ router.put('/budget', function (req,res) {
   User.findOne(filter, (err, user) => {
     if (err) {
       console.log(err);
-      res.status(500).send({
+      return res.status(500).send({
         message: "Internal Server Error",
         error: err
       })
@@ -179,7 +183,7 @@ router.put('/budget', function (req,res) {
         user.save( (err, savedUser) => {
           if (err) {
             console.log(err);
-            res.status(500).send({
+            return res.status(500).send({
               error: err,
               message: "Internal Server Error"
             });
@@ -194,7 +198,7 @@ router.put('/budget', function (req,res) {
       }
       // User not found
       else {
-        res.status(404).send({
+        return res.status(404).send({
           message: "User not found"
         })
       }
