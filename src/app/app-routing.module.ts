@@ -4,11 +4,17 @@ import { BudgetComponent } from './pages/budget/budget.component';
 import { CalculateComponent } from './pages/calculate/calculate.component';
 import { HomeComponent } from './pages/home/home.component';
 import { SigninComponent } from './pages/signin/signin.component';
-import { AuthGuard } from './shared/auth.guard';
+import { AuthGuard } from './shared/guards/auth.guard';
 import { SessionComponent } from './shared/session/session.component';
 import { TransactionsComponent } from './shared/transactions/transactions.component';
+import { DesktopGuard } from './shared/guards/desktop.guard';
 
 const routes: Routes = [
+  {
+    path: '',
+    component:HomeComponent,
+    canActivate: [DesktopGuard]
+  },
   {
     path: '',
     component: HomeComponent,
