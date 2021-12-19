@@ -95,26 +95,43 @@ router.get("/:userName", [userAuth], async (req, res) => {
 });
 
 /**
- * Delete a user TODO: test middleware
+ * Delete a user
  */
 router.delete("/:userName", [isAdminUser], async (req, res) => {
-  User.deleteOne({ userName: req.params.userName}, (err, user) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send({
-        message: "Internal Server Error"
-      });
-    }
-    else {
-      return res.status(200).send({
-        message: `User ${req.params.userName} was successfully deleted`
-      });
-    }
-  })
+  try {
+    User.deleteOne({ userName: req.params.userName}, (err, result) => {
+      if (err) {
+        console.log(err);
+        return res.status(500).send({
+          message: "Internal Server Error"
+        });
+      }
+      else {
+        // one record was deleted
+        if (result.deletedCount !== 0) {
+          console.log(`User: ${req.params.userName}, was DELETED.`)
+          return res.status(200).send({
+            message: `User: ${req.params.userName}, has successfully been deleted.`
+          });
+        }
+        else {
+          return res.status(400).send({
+            message: `Username: ${req.params.userName}, is invalid.`
+          })
+        }
+      }
+    })
+  }
+  catch(e) {
+    console.log(e);
+    return res.status(500).send({
+      message: "Internal Server Error"
+    });
+  }
 });
 
 /**
- * Gets the users budget TODO: test middleware
+ * Gets the users budget
  */
 router.get("/:userName/budget", [userAuth], async (req, res) => {
   try {
@@ -155,17 +172,11 @@ router.get("/:userName/budget", [userAuth], async (req, res) => {
 });
 
 /**
- * Update Budget TODO: test middleware
+ * Update Budget
  */
-router.put('/budget', [userAuth], async (req,res) => {
+router.put('/:userName/budget', [userAuth], async (req,res) => {
 
-  // Filter
-  const filter = {
-    userName : req.body.userName
-  }
-
-  // Query
-  User.findOne(filter, (err, user) => {
+  User.findOne({ userName: req.params.userName }, (err, user) => {
     if (err) {
       console.log(err);
       return res.status(500).send({
@@ -191,8 +202,7 @@ router.put('/budget', [userAuth], async (req,res) => {
           // Save successful
           else {
             // Return new budget
-            console.log(savedUser);
-            res.json(savedUser.budget);
+            res.status(202).json(savedUser.budget);
           }
         })
       }

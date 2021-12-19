@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -16,6 +17,8 @@ import { ConfirmAmountDialogComponent } from './shared/confirm-amount-dialog/con
 import { TransactionsComponent } from './shared/transactions/transactions.component';
 import { BudgetComponent } from './pages/budget/budget.component';
 import { CalculateComponent } from './pages/calculate/calculate.component';
+import { SigninComponent } from './pages/signin/signin.component';
+import { SessionComponent } from './shared/session/session.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,9 @@ import { CalculateComponent } from './pages/calculate/calculate.component';
     ConfirmAmountDialogComponent,
     TransactionsComponent,
     BudgetComponent,
-    CalculateComponent
+    CalculateComponent,
+    SigninComponent,
+    SessionComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +41,8 @@ import { CalculateComponent } from './pages/calculate/calculate.component';
     MatDialogModule,
     FlexLayoutModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]
