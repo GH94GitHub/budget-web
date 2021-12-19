@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path = require('path');
+const getUA = require("../middleware/getUserAgent");
 
+// APIs
 const usersAPI = require("./routes/user-api");
 const sessionAPI = require("./routes/session-api");
 
@@ -13,6 +15,7 @@ app.use(bodyParser.urlencoded({'extended':true}));
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '../dist/budget-web')));
 app.use('/', express.static(path.join(__dirname, '../dist/budget-web')));
+app.use(getUA);
 
 /**
  * Variables
