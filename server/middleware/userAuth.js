@@ -5,18 +5,26 @@ module.exports = (req, res, next) => {
     const decodedToken = decode(req.headers.authorization)
     const userName = decodedToken.userName;
 
-    //
-    if (req.body.userName && req.body.userName !== userName) {
-      throw 'Invalid user ID';
-    } else {
-      console.log('successful');
-      next();
+    if (decodedToken.role === 0) {
+      console.log('admin');
+      return next();
     }
+    if (
+      (req.body.userName && req.body.userName === userName) ||
+      (req.params.userName && req.params.userName === userName)
+      )
+      {
+        console.log('successful');
+        return next();
+      } else {
+        throw 'You do not have access';
+      }
   }
   catch(e) {
-    console.log(e.message);
+    console.log(e);
     res.status(401).send({
-      message: e.error
+      message: e,
+      error: e.message
     });
   }
 };

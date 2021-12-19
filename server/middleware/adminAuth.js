@@ -6,16 +6,17 @@ module.exports = (req, res, next) => { // TODO:
     const userRole = decodedToken.role;
 
     if (userRole && userRole !== 0) {
-      throw 'No Access'
+      throw 'You do not have access to admin rights';
     }
     else {
       console.log('successful')
-      next();
+      return next();
     }
   }
   catch(e) {
     res.status(401).send({
-      error: e.error
+      message: e,
+      error: e.message
     })
   }
 }
