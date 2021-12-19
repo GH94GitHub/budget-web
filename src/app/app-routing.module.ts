@@ -9,15 +9,10 @@ import { SessionComponent } from './shared/session/session.component';
 import { TransactionsComponent } from './shared/transactions/transactions.component';
 import { DesktopGuard } from './shared/guards/desktop.guard';
 import { MobileLayoutComponent } from './shared/mobile-layout/mobile-layout.component';
-import { MobileHomeComponent } from './pages/mobile-home/mobile-home.component';
 import { MobileGuard } from './shared/guards/mobile.guard';
+import { SigninMobileComponent } from './pages/signin-mobile/signin-mobile.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component:HomeComponent,
-    canActivate: [DesktopGuard]
-  },
   {
     path: '',
     component: HomeComponent,
@@ -37,24 +32,31 @@ const routes: Routes = [
     ],
     canActivate: [AuthGuard]
   },
-  {
-    path: "mobile",
-    component: MobileLayoutComponent,
-    children: [
-      {
-        path: "home",
-        component: MobileHomeComponent
-      }
-    ],
-    canActivate: [MobileGuard]
-  },
+  // ----- Mobile page routing
+  // {
+  //   path: "mobile",
+  //   component: MobileLayoutComponent,
+  //   children: [
+  //     {
+  //       path: "home",
+  //       component: MobileHomeComponent
+  //     }
+  //   ],
+  //   canActivate: [MobileGuard]
+  // },
   {
     path: 'session',
     component: SessionComponent,
     children: [
       {
         path: 'signin',
-        component: SigninComponent
+        component: SigninComponent,
+        canActivate: [DesktopGuard]
+      },
+      {
+        path: 'mobile/signin',
+        component: SigninMobileComponent,
+        canActivate: [MobileGuard]
       }
     ]
   },

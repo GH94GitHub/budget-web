@@ -13,8 +13,8 @@ export class DesktopGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       console.log(`Height: ${window.innerHeight}, Width: ${window.innerWidth}.`);
       // User is on mobile
-      if (window.innerWidth <= 600 && window.innerHeight <= 800) {
-        this.router.navigate(['/mobile/home']);
+      if (window.innerWidth <= 500 && window.innerHeight <= 900) {
+        this.router.navigate(['session/mobile/signin']);
         return false;
       }
       // User is on desktop
