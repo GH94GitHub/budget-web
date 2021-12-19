@@ -9,6 +9,7 @@ const userSchema = new Schema(
     lastName: { type: String },
     userName: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    role: { type: Number, default: 1 },
     bills: [billSchema],
     budget: {
       amount: { type: Number },
