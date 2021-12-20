@@ -1,7 +1,9 @@
 mat-card {
   background-color: rgba(0,0,0,.6);
+  padding: 15px 10px 0;
+
 }
 
-#signinButton {
-  margin: 10px;
+.mat-raised-button {
+  margin: 10px 5px;
 }
