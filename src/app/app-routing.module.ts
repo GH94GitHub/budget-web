@@ -12,12 +12,17 @@ import { MobileGuard } from './shared/guards/mobile.guard';
 import { SigninMobileComponent } from './pages/signin-mobile/signin-mobile.component';
 import { SessionMobileComponent } from './shared/session-mobile/session-mobile.component';
 import { SigninMobileFormComponent } from './pages/signin-mobile-form/signin-mobile-form.component';
+import { BaseLayoutComponent } from './shared/base-layout/base-layout.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: BaseLayoutComponent,
     children: [
+      {
+        path: '',
+        component: HomeComponent
+      },
       {
         path: 'budget',
         component: BudgetComponent
@@ -73,7 +78,7 @@ const routes: Routes = [
   },
   {
     path: "**",
-    redirectTo: '/'
+    redirectTo: ""
   }
 ];
 

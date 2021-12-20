@@ -13,10 +13,4 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router, private cookieService: CookieService) {}
 
   ngOnInit(): void {}
-
-
-  signout(): void {
-    this.cookieService.delete('session_user');
-    this.router.navigate(['/session/signin']);
-  }
 }

@@ -23,6 +23,11 @@ import { MobileLayoutComponent } from './shared/mobile-layout/mobile-layout.comp
 import { SigninMobileComponent } from './pages/signin-mobile/signin-mobile.component';
 import { SessionMobileComponent } from './shared/session-mobile/session-mobile.component';
 import { SigninMobileFormComponent } from './pages/signin-mobile-form/signin-mobile-form.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { BaseLayoutComponent } from './shared/base-layout/base-layout.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+
 
 @NgModule({
   declarations: [
@@ -37,7 +42,8 @@ import { SigninMobileFormComponent } from './pages/signin-mobile-form/signin-mob
     MobileLayoutComponent,
     SigninMobileComponent,
     SessionMobileComponent,
-    SigninMobileFormComponent
+    SigninMobileFormComponent,
+    BaseLayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +56,10 @@ import { SigninMobileFormComponent } from './pages/signin-mobile-form/signin-mob
     FlexLayoutModule,
     HttpClientModule,
     ReactiveFormsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

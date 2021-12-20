@@ -1,0 +1,13 @@
+<mat-toolbar fxLayoutAlign="space-between">
+  <span fxLayoutAlign="none center">Track Budget</span>
+
+    <button mat-button [matMenuTriggerFor]="dropdown">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #dropdown="matMenu" xPosition="before">
+      <button mat-menu-item>Item 1</button>
+      <button mat-menu-item (click)="signout()">Sign Out</button>
+    </mat-menu>
+
+</mat-toolbar>
+<router-outlet></router-outlet>
