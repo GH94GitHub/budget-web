@@ -130,6 +130,7 @@ router.delete("/:userName", [isAdminUser], async (req, res) => {
   }
 });
 
+/* -------------- Budget ------------ */
 /**
  * Gets the users budget
  */
@@ -215,6 +216,227 @@ router.put('/:userName/budget', [userAuth], async (req,res) => {
     }
   })
 
+});
+
+/* -------------- Bills ------------ */
+/**
+ * Get bills by userName TODO: test with SOAP UI
+ */
+router.get('/:userName/bills', [userAuth], async (req, res) => {
+  try{
+    User.findOne({ userName: req.params.userName }, (err, user) => {
+      if (err) {
+        throw new Error("Internal Server Error");
+      }
+      // query went through
+      else {
+        if (!user) {
+          throw new Error("No user was found");
+        }
+        // user exists
+        else {
+          console.log(user.bills);
+          return res.status(200).json(user.bills);
+        }
+      }
+    });
+  }
+  catch(e) {
+    console.log(e);
+    return res.status(500).send({
+      error: e.error,
+      message: "Internal Server Error"
+    })
+  }
+});
+
+/**
+ * Get bill by id TODO: test with SOAPUI
+ */
+router.get(':userName/bills/:id', [userAuth], (req, res) => {
+  try {
+    User.findOne({ userName: req.params.userName }, (err, user) => {
+      // MongoDB Error
+      if (err) {
+        console.log(err);
+        throw new Error("Internal Server Error");
+      }
+      // Query went through
+      else {
+        // No user was found
+        if (!user) {
+          throw new Error("No user was found.");
+        }
+        // User found
+        else {
+          for(let bill of user.bills) {
+            if (bill._id === req.params.id) {
+              console.log(bill);
+              return res.status(200).json({
+                message: `Successfully retrieved Bill: ${bill.name};`,
+                data: bill
+              });
+            }
+          }
+
+          throw new Error("No bill was found on that user.")
+        }
+      }
+    })
+  }
+  catch(e) {
+    console.log(e);
+    return res.status(500).send({
+      message: e.message
+    });
+  }
+});
+/**
+ * UPDATE bill by id TODO: test with SOAPUI
+ */
+router.put(':userName/bills/:id', [userAuth], (req, res) => {
+  try{
+    User.findOne({ userName: req.params.userName }, (err, user) => {
+      if (err) {
+        console.log(err);
+        throw new Error("Internal Server Error");
+      }
+      else {
+        // User was not found
+        if (!user) {
+          throw new Error(`User: ${user.userName} was not found.`);
+        }
+        // User was found
+        else {
+
+          for (let [index, bill] of user.bills) {
+            if (bill._id === req.params.id) {
+              user.bills[index] = req.body;
+
+            }
+          }
+          // Bill was not found on user
+          if (!chosenBill) {
+            throw new Error("Bill was not found");
+          }
+          // Bill was found
+          else {
+            console.log(chosenBill);
+            user.save().then((savedUser) => {
+              console.log(savedUser);
+              res.status(201).json({
+                message: `Successfully updated bill`,
+                data: savedUser.bills
+              });
+            }).catch((err) => {
+              console.log(err);
+              throw new Error(`Failed to save user bill: ${user}.`);
+            });
+          }
+        }
+      }
+    });
+  }
+  catch(e) {
+    console.log(e);
+    return res.status(500).json({
+      error: e.error,
+      message: e.message
+    });
+  }
+});
+/**
+ * DELETE bill by id TODO: test with SOAPUI
+ */
+router.delete(':userName/bills/:id', [userAuth], (req, res) => {
+  try{
+    User.findOne({ userName: req.params.userName }, (err, user) => {
+      if (err) {
+        console.log(err);
+        throw new Error("Internal Server Error");
+      }
+      // query went through
+      else {
+        // no user was found
+        if (!user) {
+          throw new Error(`User: ${req.params.userName}, was not found.`);
+        }
+        // user was found
+        else {
+          let billToDelete = user.bills.id(req.params.id);
+
+          // bill exists
+          if (billToDelete) {
+            User.updateOne({ userName: req.params.userName }, {
+              $pull: {
+                bills: req.params.id
+              }
+            }, { new: 'true' }, (err, doc) => {
+              if (err) {
+                console.log(err);
+                return res.status(500).json({
+                  message: `Failed to delete bill`,
+                });
+              }
+              // query went through
+              else {
+                return res.status(201).json({
+                  message: `Successfully deleted bill`
+                });
+              }
+            });
+          }
+          // bill wasn't found on user
+          else {
+            throw new Error("Specified bill does not exist.");
+          }
+        }
+      }
+    });
+  }
+  catch(e) {
+    console.log(e);
+    return res.status(500).json({
+      message: e.message
+    });
+  }
+});
+
+/**
+ * Create bill TODO: test with SOAP UI
+ */
+router.post('/:userName/bills', [userAuth], async (req, res) => {
+  try{
+    User.findOne({ userName: req.params.userName }, (err, user) => {
+      if (err) {
+        throw new Error("Internal Server Error");
+      }
+      else {
+        if (!user) {
+          throw new Error("User was not found");
+        }
+        else {
+          user.bills = req.body;
+          user.save().then((savedUser) => {
+            res.status(201).send({
+              message: `Successfully added bill: ${req.body.name}.`,
+              data: req.body
+            });
+          }).catch(err => {
+            console.log(err);
+            throw new Error(`Failed to save bill to user: ${user.firstName}`);
+          })
+        }
+      }
+    });
+  }
+  catch(e) {
+    console.log(e);
+    return res.status(500).send({
+      error: e.error,
+      message: "Internal Server Error"
+    })
+  }
 });
 
 module.exports = router;
