@@ -2,6 +2,9 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+
+const BaseResponse = require('../services/BaseResponse')
+const ErrorResponse = require('../services/ErrorResponse');
 const config = require("../../config.js");
 
 const router = express.Router();
@@ -15,20 +18,18 @@ router.post("/signin", (req, res) => {
     User.findOne({ userName: req.body.userName }, (err, user) => {
       if (err) {
         console.log(err);
-        res.status(500).send({
-          message: "Internal Server Error"
-        });
+        const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
+        return res.status(errorResponse.httpCode).json(errorResponse.toObject());
       }
       // query went through
       else {
         if (!user) {
-          res.status(404).send({
-            message: `The userName ${req.body.userName} doesn't exist.`
-          });
-        }
+          const errorResponse = new ErrorResponse(404, `User ${req.body.userName} was not found`, null);
+
+          return  res.status(errorResponse.httpCode).json(errorResponse.toObject());
+      }
         // User exists
         else {
-
           let authenticated = bcrypt.compareSync(req.body.password, user.password);
 
           if (authenticated) {
@@ -38,27 +39,26 @@ router.post("/signin", (req, res) => {
               userName: req.body.userName,
               role: user.role
             }, config.secret, { expiresIn: "24h" });
-            res.status(200).send({
-              message: "Successfully signed in",
+
+            const baseResponse = new BaseResponse(202, `Successfully signed in as ${user.userName}`, {
               auth: true,
               token: token
             });
+            return res.status(baseResponse.httpCode).json(baseResponse.toObject());
           }
           // invalid password
           else {
-            res.status(400).send({
-              message: "Invalid Password"
-            });
+            const errorResponse = new ErrorResponse(400, 'Invalid Password', null);
+            return res.status(errorResponse.httpCode).json(errorResponse.toObject());
           }
         }
       }
     });
   }
   catch(e) {
-    console.log(e.message);
-    res.status(500).send({
-      message: "Internal Server Error"
-    });
+    console.log(e);
+    const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
   }
 });
 

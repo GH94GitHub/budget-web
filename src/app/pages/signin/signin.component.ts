@@ -38,8 +38,8 @@ export class SigninComponent implements OnInit {
       console.log(res);
 
       // user is authenticated
-      if (res.auth) {
-        const token = res.token;
+      if (res.data.auth) {
+        const token = res.data.token;
         this.cookieService.set('session_user', token, 1)
         this.router.navigate(['/']);
       }
