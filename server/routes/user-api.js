@@ -204,7 +204,7 @@ router.put('/:userName/budget', [userAuth], async (req,res) => {
 
 /* -------------- Bills ------------ */
 /**
- * Get bills by userName TODO: test with SOAP UI
+ * Get bills by userName
  */
 router.get('/:userName/bills', [userAuth], async (req, res) => {
   try{
@@ -237,9 +237,9 @@ router.get('/:userName/bills', [userAuth], async (req, res) => {
 });
 
 /**
- * Get bill by id TODO: test with SOAPUI
+ * Get bill by id
  */
-router.get(':userName/bills/:id', [userAuth], (req, res) => {
+router.get('/:userName/bills/:id', [userAuth], (req, res) => {
   try {
     User.findOne({ userName: req.params.userName }, (err, user) => {
       // MongoDB Error
@@ -268,17 +268,6 @@ router.get(':userName/bills/:id', [userAuth], (req, res) => {
             const errorResponse = new ErrorResponse(404, "The bill was not found", null);
             return res.status(errorResponse.httpCode).json(errorResponse.toObject());
           }
-
-          // for(let bill of user.bills) {
-          //   if (bill._id === req.params.id) {
-          //     console.log(bill);
-          //     return res.status(200).json({
-          //       message: `Successfully retrieved Bill: ${bill.name};`,
-          //       data: bill
-          //     });
-          //   }
-          // }
-          //throw new Error("No bill was found on that user.")
         }
       }
     })
@@ -290,106 +279,120 @@ router.get(':userName/bills/:id', [userAuth], (req, res) => {
   }
 });
 /**
- * UPDATE bill by id TODO: test with SOAPUI TODO: Error Messages
+ * UPDATE bill by id
  */
-router.put(':userName/bills/:id', [userAuth], (req, res) => {
+router.put('/:userName/bills/:id', [userAuth], (req, res) => {
   try{
     User.findOne({ userName: req.params.userName }, (err, user) => {
       if (err) {
         console.log(err);
-        const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
+        const errorResponse = new ErrorResponse(500, "Internal Server Error");
         return res.status(errorResponse.httpCode).json(errorResponse.toObject());
       }
+      // Query went through
       else {
-        // User was not found
         if (!user) {
-          const errorResponse = new ErrorResponse(404, `The username ${req.params.userName} doesn't exist`, null);
+          const errorResponse = new ErrorResponse(404, `The user ${req.params.userName} doesn't exist`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
         // User was found
         else {
-
-          // TODO: FIX WITH MONGODB QUERY TODO: ERROR MESSAGES HERE AND DOWN
-          for (let [index, bill] of user.bills) {
-            if (bill._id === req.params.id) {
-              user.bills[index] = req.body;
-
+          // Get specified bill
+          let bill = user.bills.id(req.params.id);
+          let billChanged = false;
+          // Bill doesn't exist
+          if (!bill) {
+            const errorResponse = new ErrorResponse(404, "The specified bill doesn't exist", null);
+            return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+          }
+          // Update the bill if user provided information for it
+          for(let key of Object.keys(req.body)) {
+            if (key in bill) {
+              bill[key] = req.body[key];
+              billChanged = true;
             }
           }
-          // Bill was not found on user
-          if (!chosenBill) {
-            throw new Error("Bill was not found");
-          }
-          // Bill was found
-          else {
-            console.log(chosenBill);
-            user.save().then((savedUser) => {
-              console.log(savedUser);
-              res.status(201).json({
-                message: `Successfully updated bill`,
-                data: savedUser.bills
-              });
-            }).catch((err) => {
+          if (billChanged) {
+            user.save().then( (user) => {
+              const baseResponse = new BaseResponse(200, "Successfully updated bill", bill);
+              return res.status(baseResponse.httpCode).json(baseResponse.toObject());
+            }).catch( (err) => {
               console.log(err);
-              throw new Error(`Failed to save user bill: ${user}.`);
-            });
+              const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+              return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+            })
+          }
+          // Bill wasn't changed
+          else {
+            const baseResponse = new BaseResponse(200, "Bill wasn't changed", bill);
+            return res.status(baseResponse.httpCode).json(baseResponse.toObject());
           }
         }
       }
-    });
+    })
   }
   catch(e) {
     console.log(e);
-    return res.status(500).json({
-      error: e.error,
-      message: e.message
-    });
+    const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
   }
 });
 /**
- * DELETE bill by id TODO: test with SOAPUI TODO: Error Messages
+ * DELETE bill by id
  */
-router.delete(':userName/bills/:id', [userAuth], (req, res) => {
+router.delete('/:userName/bills/:id', [userAuth], (req, res) => {
   try{
     User.findOne({ userName: req.params.userName }, (err, user) => {
       if (err) {
         console.log(err);
-        throw new Error("Internal Server Error");
+        const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+        return res.status(errorResponse.httpCode).json(errorResponse.toObject());
       }
-      // query went through
+      // Query went through
       else {
-        // no user was found
+        // No user was found
         if (!user) {
-          throw new Error(`User: ${req.params.userName}, was not found.`);
+          const errorResponse = new ErrorResponse(404, `User: ${req.params.userName}, was not found.`, null);
+          return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
-        // user was found
+        // User was found
         else {
           let billToDelete = user.bills.id(req.params.id);
 
-          // bill exists
+          console.log("-------- Bill to delete -------")
+          console.log(billToDelete);
+          // Bill exists
           if (billToDelete) {
             User.updateOne({ userName: req.params.userName }, {
               $pull: {
-                bills: req.params.id
+                bills: billToDelete
               }
             }, { new: 'true' }, (err, doc) => {
+              // Query Error
               if (err) {
                 console.log(err);
-                return res.status(500).json({
-                  message: `Failed to delete bill`,
-                });
+                const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+                return res.status(errorResponse.httpCode).json(errorResponse.toObject());
               }
-              // query went through
+              // Query went through
               else {
-                return res.status(201).json({
-                  message: `Successfully deleted bill`
-                });
+                // Document was updated
+                if (doc.nModified > 0) {
+                  const baseResponse = new BaseResponse(201, "Successfully deleted bill", doc);
+                  return res.status(baseResponse.httpCode).json(baseResponse.toObject());
+                }
+                // Nothing was updated
+                else {
+                  const baseResponse = new BaseResponse(200, "Nothing was updated", null);
+                  return res.status(baseResponse.httpCode).json(baseResponse.toObject());
+                }
               }
             });
           }
-          // bill wasn't found on user
+          // Bill wasn't found on user
           else {
-            throw new Error("Specified bill does not exist.");
+            const errorResponse = new ErrorResponse(404, "The Specified bill doesn't exist", null);
+            return res.status(errorResponse.httpCode).json(errorResponse.toObject());
           }
         }
       }
@@ -397,46 +400,47 @@ router.delete(':userName/bills/:id', [userAuth], (req, res) => {
   }
   catch(e) {
     console.log(e);
-    return res.status(500).json({
-      message: e.message
-    });
+    const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
   }
 });
 
 /**
- * Create bill TODO: test with SOAP UI TODO: Error Messages
+ * Create bill
  */
 router.post('/:userName/bills', [userAuth], async (req, res) => {
   try{
-    User.findOne({ userName: req.params.userName }, (err, user) => {
-      if (err) {
-        throw new Error("Internal Server Error");
+    User.findOneAndUpdate({ userName: req.params.userName }, {
+      $push: {
+        bills: req.body
       }
+    }, { new: true }, (err, updatedUser) => {
+      if (err) {
+        const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+        return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+      }
+      // Query went through
       else {
-        if (!user) {
-          throw new Error("User was not found");
+        if (updatedUser) {
+          const i = updatedUser.bills.length - 1;
+          const bill = updatedUser.bills[i];
+          console.log(updatedUser.bills);
+          const baseResponse = new BaseResponse(201, "Successfully created bill", bill);
+          return res.status(baseResponse.httpCode).json(baseResponse.toObject());
         }
+        // Failed to create bill
         else {
-          user.bills = req.body;
-          user.save().then((savedUser) => {
-            res.status(201).send({
-              message: `Successfully added bill: ${req.body.name}.`,
-              data: req.body
-            });
-          }).catch(err => {
-            console.log(err);
-            throw new Error(`Failed to save bill to user: ${user.firstName}`);
-          })
+          const errorResponse = new ErrorResponse(401, "Failed to create bill", null);
+          return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+
         }
       }
     });
   }
   catch(e) {
     console.log(e);
-    return res.status(500).send({
-      error: e.error,
-      message: "Internal Server Error"
-    })
+    const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
   }
 });
 
