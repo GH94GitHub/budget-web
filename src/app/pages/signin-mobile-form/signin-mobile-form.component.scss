@@ -1,9 +1,5 @@
-mat-card {
-  background-color: rgba(0,0,0,.6);
-  padding: 15px 10px 0;
+@import url('../../material.scss');
 
-}
-
-.mat-raised-button {
-  margin: 10px 5px;
+.mat-card-content {
+  font-size: 12px;
 }

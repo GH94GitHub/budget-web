@@ -1,9 +1,6 @@
-.buttonContainer {
-  width: 100%;
-}
+@import url('../../material.scss');
+
 .mat-raised-button {
-  margin: 10px;
-  border-radius: 15px;
   min-width: 60%;
 }
 

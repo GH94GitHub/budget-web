@@ -1,24 +1,26 @@
-<form [formGroup]="signinForm" (ngSubmit)="signin()">
-<mat-card>
-  <mat-card-content fxLayout="column">
-    <!-- Sign in form -->
+    <form [formGroup]="signinForm" (ngSubmit)="signin()">
+    <mat-card>
+      <mat-card-title>LOG IN</mat-card-title>
+      <mat-card-content fxLayout="column">
+        <!-- Sign in form -->
 
-      <!-- Username Field-->
-      <mat-form-field fxFlex appearance="fill">
-        <mat-label>Username</mat-label>
-        <input matInput type="text" placeholder="Enter Username..." formControlName="userName">
-      </mat-form-field>
+          <!-- Username Field-->
+          <mat-form-field fxFlex appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput type="text" placeholder="Enter Username..." formControlName="userName">
+          </mat-form-field>
 
-      <!-- Password Field-->
-      <mat-form-field fxFlex appearance="fill">
-        <mat-label>Password</mat-label>
-        <input matInput type="password" placeholder="Enter Password..." formControlName="password">
-      </mat-form-field>
+          <!-- Password Field-->
+          <mat-form-field fxFlex appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" placeholder="Enter Password..." formControlName="password">
+          </mat-form-field>
 
-    </mat-card-content>
-  </mat-card>
-  <div fxLayoutAlign="space-between">
-    <button type="button" mat-raised-button routerLink="/session/mobile">BACK</button>
-    <button type="submit" id="signinButton" mat-raised-button [disabled]="!signinForm.valid">SIGNIN</button>
-  </div>
-  </form>
+          <!-- TODO: Add error message -->
+        </mat-card-content>
+      </mat-card>
+      <div fxLayoutAlign="space-between">
+        <button type="button" mat-raised-button routerLink="/session/mobile">BACK</button>
+        <button type="submit" id="signinButton" mat-raised-button [disabled]="!signinForm.valid">LOGIN</button>
+      </div>
+      </form>

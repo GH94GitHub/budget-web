@@ -1,24 +1,27 @@
-<mat-card>
-  <mat-card-title>SIGNIN</mat-card-title>
-  <form [formGroup]="signinForm" (ngSubmit)="signin()">
-  <mat-card-content fxLayout="column">
-    <!-- Sign in form -->
+<div class="container" fxLayoutAlign="center center" fxLayout="row">
+  <div fxFlex="30">
+    <form [formGroup]="signinForm" (ngSubmit)="signin()">
+    <mat-card>
+      <mat-card-title>LOG IN</mat-card-title>
+      <mat-card-content fxLayout="column">
+        <!-- Sign in form -->
 
-      <!-- Username Field-->
-      <mat-form-field fxFlex appearance="fill">
-        <mat-label>Username</mat-label>
-        <input matInput type="text" placeholder="Enter Username..." formControlName="userName">
-      </mat-form-field>
+          <!-- Username Field-->
+          <mat-form-field fxFlex appearance="fill">
+            <mat-label>Username</mat-label>
+            <input matInput type="text" placeholder="Enter Username..." formControlName="userName">
+          </mat-form-field>
 
-      <!-- Password Field-->
-      <mat-form-field fxFlex appearance="fill">
-        <mat-label>Password</mat-label>
-        <input matInput type="password" placeholder="Enter Password..." formControlName="password">
-      </mat-form-field>
+          <!-- Password Field-->
+          <mat-form-field fxFlex appearance="fill">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" placeholder="Enter Password..." formControlName="password">
+          </mat-form-field>
 
-    </mat-card-content>
-    <mat-card-actions>
-      <button type="submit" mat-raised-button [disabled]="!signinForm.valid">SIGNIN</button>
-    </mat-card-actions>
-  </form>
-  </mat-card>
+          <!-- TODO: Add error message -->
+        </mat-card-content>
+      </mat-card>
+      <button type="submit" mat-raised-button [disabled]="!signinForm.valid">LOGIN</button>
+    </form>
+  </div>
+</div>
