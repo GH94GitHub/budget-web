@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const BaseResponse = require('../services/BaseResponse')
 const ErrorResponse = require('../services/ErrorResponse');
 const config = require("../../config.js");
+const { updateBills } = require("../utils/authentication");
 
 const router = express.Router();
 const saltRounds = 10;
@@ -34,11 +35,11 @@ router.post("/signin", (req, res) => {
 
           if (authenticated) {
             console.log(`User: ${user.userName}, just signed in!`);
-            // sign token
+            // Sign token
             let token = jwt.sign({
               userName: req.body.userName,
               role: user.role
-            }, config.secret, { expiresIn: "24h" });
+            }, config.secret, { expiresIn: "24h"});
 
             const baseResponse = new BaseResponse(202, `Successfully signed in as ${user.userName}`, {
               auth: true,

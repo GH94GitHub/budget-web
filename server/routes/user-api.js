@@ -13,7 +13,7 @@ const router = express.Router();
 const saltRounds = 10;
 
 /**
- * Creates a User
+ * Creates a User (Admin)
  */
 router.post("/", [isAdminUser], async (req, res) => {
   // query username to see if user exists
@@ -60,11 +60,12 @@ router.post("/", [isAdminUser], async (req, res) => {
 });
 
 /**
- * Get user by userName
+ * Get user
  */
-router.get("/:userName", [userAuth], async (req, res) => {
+ router.get("/", async (req, res) => {
   try {
-    User.findOne({ userName: req.params.userName }, (err, user) => {
+    const localUser = req.app.locals.user;
+    User.findOne({ userName: localUser.userName }, (err, user) => {
       if (err) {
         console.log(err);
         const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
@@ -74,13 +75,13 @@ router.get("/:userName", [userAuth], async (req, res) => {
       else {
         // Invalid username
         if (!user) {
-          const errorResponse = new ErrorResponse(404, `The username ${req.params.userName} doesn't exist`, null);
+          const errorResponse = new ErrorResponse(404, `The username ${localUser.userName} doesn't exist`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
         // Found their user
         else {
           console.log(user);
-          const baseResponse = new BaseResponse(200, `Successfully retrieved user ${req.params.userName}`, user);
+          const baseResponse = new BaseResponse(200, `Successfully retrieved user ${localUser.userName}`, user);
           return res.status(baseResponse.httpCode).json(baseResponse.toObject());
         }
       }
@@ -93,12 +94,15 @@ router.get("/:userName", [userAuth], async (req, res) => {
   }
 });
 
+
+
 /**
- * Delete a user
+ * Delete user
  */
-router.delete("/:userName", [isAdminUser], async (req, res) => {
+ router.delete("/", async (req, res) => {
   try {
-    User.deleteOne({ userName: req.params.userName}, (err, result) => {
+    const localUser = req.app.locals.user;
+    User.deleteOne({ userName: localUser.userName}, (err, result) => {
       if (err) {
         console.log(err);
         const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
@@ -107,13 +111,13 @@ router.delete("/:userName", [isAdminUser], async (req, res) => {
       else {
         // Record was deleted
         if (result.deletedCount !== 0) {
-          console.log(`User ${req.params.userName} was DELETED`)
+          console.log(`User ${localUser.userName} was DELETED`)
 
-          const baseResponse = new BaseResponse(200, `The user ${req.params.userName} has successfully been deleted`, null);
+          const baseResponse = new BaseResponse(200, `The user ${localUser.userName} has successfully been deleted`, null);
           return res.status(baseResponse.httpCode).json(baseResponse.toObject());
         }
         else {
-          const errorResponse = new ErrorResponse(400, `The username ${req.params.userName} doesn't exist`, null);
+          const errorResponse = new ErrorResponse(400, `The username ${localUser.userName} doesn't exist`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
       }
@@ -130,9 +134,10 @@ router.delete("/:userName", [isAdminUser], async (req, res) => {
 /**
  * Gets the users budget
  */
-router.get("/:userName/budget", [userAuth], async (req, res) => {
+router.get("/budget", async (req, res) => {
   try {
-    User.findOne({ userName: req.params.userName}, (err, user) => {
+    const localUser = req.app.locals.user;
+    User.findOne({ userName: localUser.userName}, (err, user) => {
       if (err) {
         console.log(err);
 
@@ -147,7 +152,7 @@ router.get("/:userName/budget", [userAuth], async (req, res) => {
         // User doesn't exist
         }
         else {
-          const errorResponse = new ErrorResponse(404, `The username ${req.params.userName} doesn't exist`, null);
+          const errorResponse = new ErrorResponse(404, `The user cannot be found`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
       }
@@ -163,52 +168,60 @@ router.get("/:userName/budget", [userAuth], async (req, res) => {
 /**
  * Update Budget
  */
-router.put('/:userName/budget', [userAuth], async (req,res) => {
-
-  User.findOne({ userName: req.params.userName }, (err, user) => {
-    if (err) {
-      console.log(err);
-      const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
-      return res.status(errorResponse.httpCode).json(errorResponse.toObject());
-    }
-    // Query went through
-    else {
-      // If user exists
-      if (user) {
-        user.set({
-          budget: req.body
-        });
-        user.save( (err, savedUser) => {
-          if (err) {
-            console.log(err);
-            const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
-            return res.status(errorResponse.httpCode).json(errorResponse.toObject());
-          }
-          // Save successful
-          else {
-            // Return new budget
-            const baseResponse = new baseResponse(202, "Successfully saved your budget", savedUser.budget);
-            return res.status(baseResponse.httpCode).json(baseResponse.toObject());
-          }
-        })
-      }
-      // User not found
-      else {
-        const errorResponse = new ErrorResponse(404, `User ${req.params.userName} doesn't exist`, null);
+router.put('/budget', async ( req, res ) => {
+  try {
+    const localUser = req.app.locals.user;
+    User.findOne({ userName: localUser.userName }, (err, user) => {
+      if (err) {
+        console.log(err);
+        const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
         return res.status(errorResponse.httpCode).json(errorResponse.toObject());
       }
-    }
-  })
+      // Query went through
+      else {
+        // If user exists
+        if (user) {
+          user.set({
+            budget: req.body
+          });
+          user.save( (err, savedUser) => {
+            if (err) {
+              console.log(err);
+              const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
+              return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+            }
+            // Save successful
+            else {
+              // Return new budget
+              const baseResponse = new BaseResponse(202, "Successfully saved your budget", savedUser.budget);
+              return res.status(baseResponse.httpCode).json(baseResponse.toObject());
+            }
+          })
+        }
+        // User not found
+        else {
+          const errorResponse = new ErrorResponse(404, `User ${localUser.userName} doesn't exist`, null);
+          return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+        }
+      }
+    })
+  }
+  catch(e) {
+    console.log(e);
+    const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+  }
 
 });
 
 /* -------------- Bills ------------ */
 /**
- * Get bills by userName
+ * Get bills
  */
-router.get('/:userName/bills', [userAuth], async (req, res) => {
+router.get('/bills', async (req, res) => {
   try{
-    User.findOne({ userName: req.params.userName }, (err, user) => {
+    const localUser = req.app.locals.user;
+    User.findOne({ userName: localUser.userName }, (err, user) => {
       if (err) {
         console.log(err);
         const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
@@ -218,7 +231,7 @@ router.get('/:userName/bills', [userAuth], async (req, res) => {
       else {
         // User doesn't exist
         if (!user) {
-          const errorResponse = new ErrorResponse(404, `User ${req.params.userName} doesn't exist`, null);
+          const errorResponse = new ErrorResponse(404, `User ${localUser.userName} doesn't exist`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
         // User exists
@@ -237,11 +250,93 @@ router.get('/:userName/bills', [userAuth], async (req, res) => {
 });
 
 /**
+ * Update bills
+ */
+router.put('/bills', async (req, res) => {
+  try {
+    const localUser = req.app.locals.user;
+    User.findOne({ userName: localUser.userName}, (err, user) => {
+      if (err) {
+        console.log(err);
+        const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+        return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+      }
+      // Query went through
+      else {
+        if (user) {
+          user.bills = req.body;
+          // Save user
+          user.save().then((result) => {
+            console.log(result);
+            const baseResponse = new BaseResponse(201, "Successfully updated bills", user.bills);
+            return res.status(baseResponse.httpCode).json(baseResponse.toObject());
+          }).catch((err) => {
+            console.log(err);
+            const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+            return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+          })
+        }
+        // User wasn't found
+        else {
+          const errorResponse = new ErrorResponse(404, `The user ${localUser.userName} was not found`, null);
+          return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+        }
+      }
+    });
+  }
+  catch(e) {
+    console.log(e);
+    const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+  }
+})
+
+/**
+ * Create bill
+ */
+ router.post('/bills', async (req, res) => {
+  try{
+    const localUser = req.app.locals.user;
+    User.findOneAndUpdate({ userName: localUser.userName }, {
+      $push: {
+        bills: req.body
+      }
+    }, { new: true }, (err, updatedUser) => {
+      if (err) {
+        const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+        return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+      }
+      // Query went through
+      else {
+        if (updatedUser) {
+          const i = updatedUser.bills.length - 1;
+          const bill = updatedUser.bills[i];
+          console.log(updatedUser.bills);
+          const baseResponse = new BaseResponse(201, "Successfully created bill", bill);
+          return res.status(baseResponse.httpCode).json(baseResponse.toObject());
+        }
+        // Failed to create bill
+        else {
+          const errorResponse = new ErrorResponse(401, "Failed to create bill", null);
+          return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+
+        }
+      }
+    });
+  }
+  catch(e) {
+    console.log(e);
+    const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+  }
+});
+/**
  * Get bill by id
  */
-router.get('/:userName/bills/:id', [userAuth], (req, res) => {
+router.get('/bills/:id', async (req, res) => {
   try {
-    User.findOne({ userName: req.params.userName }, (err, user) => {
+    const localUser = req.app.locals.user;
+    User.findOne({ userName: localUser.userName }, (err, user) => {
       // MongoDB Error
       if (err) {
         console.log(err);
@@ -252,7 +347,7 @@ router.get('/:userName/bills/:id', [userAuth], (req, res) => {
       else {
         // No user was found
         if (!user) {
-          const errorResponse = new ErrorResponse(404, `The username ${req.params.userName} doesn't exist`, null);
+          const errorResponse = new ErrorResponse(404, `The username ${localUser.userName} doesn't exist`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
         // User found
@@ -281,9 +376,10 @@ router.get('/:userName/bills/:id', [userAuth], (req, res) => {
 /**
  * UPDATE bill by id
  */
-router.put('/:userName/bills/:id', [userAuth], (req, res) => {
+router.put('/bills/:id', async (req, res) => {
   try{
-    User.findOne({ userName: req.params.userName }, (err, user) => {
+    const localUser = req.app.locals.user;
+    User.findOne({ userName: localUser.userName }, (err, user) => {
       if (err) {
         console.log(err);
         const errorResponse = new ErrorResponse(500, "Internal Server Error");
@@ -292,7 +388,7 @@ router.put('/:userName/bills/:id', [userAuth], (req, res) => {
       // Query went through
       else {
         if (!user) {
-          const errorResponse = new ErrorResponse(404, `The user ${req.params.userName} doesn't exist`, null);
+          const errorResponse = new ErrorResponse(404, `The user ${localUser.userName} doesn't exist`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
         // User was found
@@ -340,9 +436,10 @@ router.put('/:userName/bills/:id', [userAuth], (req, res) => {
 /**
  * DELETE bill by id
  */
-router.delete('/:userName/bills/:id', [userAuth], (req, res) => {
+router.delete('/bills/:id', async (req, res) => {
   try{
-    User.findOne({ userName: req.params.userName }, (err, user) => {
+    const localUser = req.app.locals.user;
+    User.findOne({ userName: localUser.userName }, (err, user) => {
       if (err) {
         console.log(err);
         const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
@@ -352,7 +449,7 @@ router.delete('/:userName/bills/:id', [userAuth], (req, res) => {
       else {
         // No user was found
         if (!user) {
-          const errorResponse = new ErrorResponse(404, `User: ${req.params.userName}, was not found.`, null);
+          const errorResponse = new ErrorResponse(404, `User: ${localUser.userName}, was not found.`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
         }
         // User was found
@@ -363,7 +460,7 @@ router.delete('/:userName/bills/:id', [userAuth], (req, res) => {
           console.log(billToDelete);
           // Bill exists
           if (billToDelete) {
-            User.updateOne({ userName: req.params.userName }, {
+            User.updateOne({ userName: localUser.userName }, {
               $pull: {
                 bills: billToDelete
               }
@@ -406,42 +503,69 @@ router.delete('/:userName/bills/:id', [userAuth], (req, res) => {
 });
 
 /**
- * Create bill
+ * Get user by userName (Admin)
  */
-router.post('/:userName/bills', [userAuth], async (req, res) => {
-  try{
-    User.findOneAndUpdate({ userName: req.params.userName }, {
-      $push: {
-        bills: req.body
-      }
-    }, { new: true }, (err, updatedUser) => {
+ router.get("/:userName", [isAdminUser], async (req, res) => {
+  try {
+    User.findOne({ userName: req.params.userName }, (err, user) => {
       if (err) {
-        const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+        console.log(err);
+        const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
         return res.status(errorResponse.httpCode).json(errorResponse.toObject());
       }
       // Query went through
       else {
-        if (updatedUser) {
-          const i = updatedUser.bills.length - 1;
-          const bill = updatedUser.bills[i];
-          console.log(updatedUser.bills);
-          const baseResponse = new BaseResponse(201, "Successfully created bill", bill);
-          return res.status(baseResponse.httpCode).json(baseResponse.toObject());
-        }
-        // Failed to create bill
-        else {
-          const errorResponse = new ErrorResponse(401, "Failed to create bill", null);
+        // Invalid username
+        if (!user) {
+          const errorResponse = new ErrorResponse(404, `The username ${req.params.userName} doesn't exist`, null);
           return res.status(errorResponse.httpCode).json(errorResponse.toObject());
-
+        }
+        // Found their user
+        else {
+          console.log(user);
+          const baseResponse = new BaseResponse(200, `Successfully retrieved user ${req.params.userName}`, user);
+          return res.status(baseResponse.httpCode).json(baseResponse.toObject());
         }
       }
     });
   }
   catch(e) {
-    console.log(e);
+    console.log(e.message);
     const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
     return res.status(errorResponse.httpCode).json(errorResponse.toObject());
   }
 });
 
+/**
+ * Delete a user by userName (Admin)
+ */
+ router.delete("/:userName", [isAdminUser], async (req, res) => {
+  try {
+    User.deleteOne({ userName: req.params.userName}, (err, result) => {
+      if (err) {
+        console.log(err);
+        const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
+        return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+      }
+      else {
+        // Record was deleted
+        if (result.deletedCount !== 0) {
+          console.log(`User ${req.params.userName} was DELETED`)
+
+          const baseResponse = new BaseResponse(200, `The user ${req.params.userName} has successfully been deleted`, null);
+          return res.status(baseResponse.httpCode).json(baseResponse.toObject());
+        }
+        else {
+          const errorResponse = new ErrorResponse(400, `The username ${req.params.userName} doesn't exist`, null);
+          return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+        }
+      }
+    })
+  }
+  catch(e) {
+    console.log(e);
+    const errorResponse = new ErrorResponse(500, 'Internal Server Error', null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
+  }
+});
 module.exports = router;

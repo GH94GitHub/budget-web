@@ -1,13 +1,13 @@
-const decode = require('../utils/authentication');
+const {verifyToken} = require('../utils/authentication');
 const ErrorResponse = require('../services/ErrorResponse');
 
 module.exports = (req, res, next) => {
   try{
     if (!req.headers.authorization) {
       const errorResponse = new ErrorResponse(401, "You do not have permission", null);
-      return res.status(errorResponse.httpCode).json(errorResponse);
+      return res.status(errorResponse.httpCode).json(errorResponse.toObject());
     }
-    const decodedToken = decode(req.headers.authorization)
+    const decodedToken = verifyToken(req.headers.authorization)
     const userName = decodedToken.userName;
 
     if (decodedToken.role === 0) {

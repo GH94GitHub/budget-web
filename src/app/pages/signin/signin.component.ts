@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { Observable } from 'rxjs';
+import { BillService } from 'src/app/shared/services/bill.service';
 import { SessionService } from 'src/app/shared/services/session.service';
 
 @Component({
@@ -19,7 +21,8 @@ export class SigninComponent implements OnInit {
     private http: HttpClient,
     private sessionService: SessionService,
     private cookieService: CookieService,
-    private router: Router) {
+    private router: Router,
+    private billService: BillService) {
   }
 
   ngOnInit(): void {
@@ -34,17 +37,17 @@ export class SigninComponent implements OnInit {
     const password = this.signinForm.controls.password.value;
 
     this.sessionService.signin(userName, password).subscribe( (res) => {
-      console.log('-- result --');
-      console.log(res);
-
       // user is authenticated
       if (res.data.auth) {
         const token = res.data.token;
-        this.cookieService.set('session_user', token, 1)
+        var date = new Date();
+        var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+        this.cookieService.set('session_user', token, midnight);
+
         this.router.navigate(['/']);
       }
-
     },
+    // Signin Error
     (err) => {
       console.log(err);
       // TODO: Display error message from 'err' variable

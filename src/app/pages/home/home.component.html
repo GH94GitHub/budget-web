@@ -1,6 +1,26 @@
-<mat-card>
-  <mat-card-content fxLayout="column" fxLayoutGap="15px">
-    <button mat-raised-button routerLink="/budget" color="accent">Budget</button>
-    <button mat-raised-button routerLink="/calculate">Calculate Budget</button>
-  </mat-card-content>
-</mat-card>
+
+<div class="container" fxLayout="row" fxLayoutAlign="center">
+  <div fxFlex="30" class="overview">
+    <!-- Overview -->
+    Overview
+  </div>
+
+  <div fxFlex="40" fxLayout="column wrap" fxLayoutAlign="center start" class="linkGroup">
+    <div class="dashboardItem" routerLink="/budget" fxLayout="column" fxLayoutAlign="center center">
+      <h3 fxFlex="20" fxLayoutAlign="center center">Budget</h3>
+      <mat-icon fxFlex class="budgetIcon"></mat-icon>
+    </div>
+    <div class="dashboardItem" routerLink="/calculate" fxLayout="column" fxLayoutAlign="center center">
+      <mat-icon fxFlex class="calcIcon">calculate</mat-icon>
+      <span fxFlex="20" fxLayoutAlign="center center">Calculate</span>
+    </div>
+    <div class="dashboardItem" routerLink="" fxLayout="column" fxLayoutAlign="center center">
+      <h3 fxFlex="20" fxLayoutAlign="center center">Item 3</h3>
+      <mat-icon fxFlex></mat-icon>
+    </div>
+    <div class="dashboardItem" routerLink="" fxLayout="column" fxLayoutAlign="center center">
+      <h3 fxFlex="20" fxLayoutAlign="center center">Item 4</h3>
+      <mat-icon fxFlex></mat-icon>
+    </div>
+  </div>
+</div>
