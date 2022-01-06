@@ -12,6 +12,7 @@ import { BillService } from '../../shared/services/bill.service';
 export class HomeComponent implements OnInit {
 
   token: string;
+  billsUpdated: boolean = false;
 
   constructor(
     private router: Router,
@@ -28,6 +29,7 @@ export class HomeComponent implements OnInit {
         // Successfully updated
         if (res.data) {
           console.log("successfully updated")
+          this.billsUpdated = true;
         }
         // Error
         else {

@@ -3,6 +3,7 @@
   <div fxFlex="30" class="overview">
     <!-- Overview -->
     Overview
+    <mat-spinner *ngIf="!billsUpdated"></mat-spinner>
   </div>
 
   <div fxFlex="40" fxLayout="column wrap" fxLayoutAlign="center start" class="linkGroup">

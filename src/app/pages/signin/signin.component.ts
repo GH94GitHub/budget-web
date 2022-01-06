@@ -6,6 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { BillService } from 'src/app/shared/services/bill.service';
 import { SessionService } from 'src/app/shared/services/session.service';
+import { Message } from 'primeng/api';
 
 @Component({
   selector: 'app-signin',
@@ -15,6 +16,7 @@ import { SessionService } from 'src/app/shared/services/session.service';
 export class SigninComponent implements OnInit {
 
   signinForm : FormGroup = {} as FormGroup;
+  msgs: Array<Message> = [];
 
   constructor(
     private fb: FormBuilder,
@@ -50,6 +52,7 @@ export class SigninComponent implements OnInit {
     // Signin Error
     (err) => {
       console.log(err);
+      this.msgs = [{severity: 'error', summary: 'Error', detail: err.error.message}];
       // TODO: Display error message from 'err' variable
     })
   }

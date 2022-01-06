@@ -32,6 +32,8 @@
     "morgan": "^1.10.0",
     "ngx-cookie-service": "^12.0.3",
     "nodemon": "^2.0.12",
+    "primeicons": "^5.0.0",
+    "primeng": "^13.0.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"

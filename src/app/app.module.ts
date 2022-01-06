@@ -27,6 +27,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BaseLayoutComponent } from './shared/base-layout/base-layout.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MessagesModule } from 'primeng/messages';
 
 
 @NgModule({
@@ -59,7 +61,9 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule,
     MatToolbarModule,
     MatMenuModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MessagesModule
   ],
   providers: [],
   bootstrap: [AppComponent]
