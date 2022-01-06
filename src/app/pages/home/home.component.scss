@@ -1,8 +1,7 @@
+@import url('../../material.scss');
+
 .container {
-  max-height: 100vh;
-}
-.linkGroup {
-  height: 100vh;
+ height: 100%;
 }
 .dashboardItem {
   cursor: pointer;
