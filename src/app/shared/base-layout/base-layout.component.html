@@ -5,7 +5,8 @@
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #dropdown="matMenu" xPosition="before">
-      <button mat-menu-item>Item 1</button>
+      <button mat-menu-item routerLink="/">Dashboard</button>
+      <button mat-menu-item routerLink="/bills">Manage Bills</button>
       <button mat-menu-item (click)="signout()">Sign Out</button>
     </mat-menu>
 
