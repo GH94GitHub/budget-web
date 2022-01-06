@@ -42,18 +42,14 @@ export class SigninComponent implements OnInit {
       // user is authenticated
       if (res.data.auth) {
         const token = res.data.token;
-        var date = new Date();
-        var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-        this.cookieService.set('session_user', token, midnight);
+        this.cookieService.set('session_user', token, 1);
 
         this.router.navigate(['/']);
       }
     },
     // Signin Error
     (err) => {
-      console.log(err);
       this.msgs = [{severity: 'error', summary: 'Error', detail: err.error.message}];
-      // TODO: Display error message from 'err' variable
     })
   }
 }
