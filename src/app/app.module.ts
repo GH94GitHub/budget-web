@@ -29,6 +29,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MessagesModule } from 'primeng/messages';
+import { BillsComponent } from './pages/bills/bills.component';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { MessagesModule } from 'primeng/messages';
     SigninMobileComponent,
     SessionMobileComponent,
     SigninMobileFormComponent,
-    BaseLayoutComponent
+    BaseLayoutComponent,
+    BillsComponent
   ],
   imports: [
     BrowserModule,
