@@ -30,7 +30,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MessagesModule } from 'primeng/messages';
 import { BillsComponent } from './pages/bills/bills.component';
-
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,9 @@ import { BillsComponent } from './pages/bills/bills.component';
     MatMenuModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MessagesModule
+    MessagesModule,
+    TableModule,
+    ToastModule
   ],
   providers: [],
   bootstrap: [AppComponent]

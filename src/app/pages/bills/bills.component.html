@@ -1,1 +1,38 @@
-<p>bills works!</p>
+<div>
+  <p-messages [(value)]="msgs" [enableService]="false"></p-messages>
+  <p-table [value]="bills">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th>Amount</th>
+        <th>Due</th>
+        <th>Repeating</th>
+        <th>Auto Payment?</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-bill>
+      <tr>
+        <td>{{ bill.name }}</td>
+        <td>{{ bill.amount | currency}}</td>
+        <td>{{ bill.dueDate | date}}</td>
+        <ng-container [ngSwitch]="bill.repeats">
+          <ng-container *ngSwitchCase="'null'">
+            <td>Never</td>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'mo'">
+            <td>Monthly</td>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>
+            <td>Every {{ bill.repeats }} days</td>
+          </ng-container>
+
+        </ng-container>
+        <td>{{ bill.auto ? "yes" : "no" }}</td>
+        <td></td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
