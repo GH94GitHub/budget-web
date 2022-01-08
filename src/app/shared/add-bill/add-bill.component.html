@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>Create Bill</h2>
+<form [formGroup]="form" autocomplete="off">
+  <mat-dialog-content fxLayout="column">
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput type="text" formControlName="name" placeholder="Enter name...">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Amount</mat-label>
+      <input matInput formControlName="amount" placeholder="Enter Amount...">
+    </mat-form-field>
+    <!--Due Date-->
+    <mat-form-field appearance="fill">
+      <mat-label>Due Date</mat-label>
+      <input formControlName="dueDate" matInput [matDatepicker]="picker" [disabled]="true">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker disabled="false"></mat-datepicker>
+    </mat-form-field>
+    <!--Does it repeat?-->
+    <div fxLayout="row" fxLayoutGap="15px">
+      <label fxFlex="50" class="radioLabel" id="repeatRadioLabel">Does it repeat?</label>
+      <mat-radio-group fxFlex="50" fxLayout="column" formControlName="repeats" aria-labelledby="repeatRadioLabel">
+        <mat-radio-button value=null>No</mat-radio-button>
+        <mat-radio-button value="mo">Monthly</mat-radio-button>
+        <mat-radio-button value="x-days" fxLayout="row" fxLayoutGap="15px">X-Days
+          <mat-form-field id="xDaysFormField" appearance="fill" [ngStyle]="{'display': form.controls.repeats.value === 'x-days' ? 'inline-block' : 'none'}">
+            <mat-label>Ex. 14</mat-label>
+            <input [formControl]="xDaysInput" matInput type="text">
+          </mat-form-field>
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!--Reminder?-->
+    <div fxLayout="row" fxLayoutGap="15px">
+      <label fxFlex class="radioLabel" id="reminderRadioLabel">Reminder?</label>
+      <mat-radio-group fxFlex formControlName="reminder" fxLayout="column" aria-labelledby="reminderRadioLabel">
+        <mat-radio-button value="true">Yes</mat-radio-button>
+        <mat-radio-button value="false">No</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between">
+    <button mat-raised-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button (click)="createBill()" [disabled]="!form.valid">Create</button>
+  </mat-dialog-actions>
+</form>

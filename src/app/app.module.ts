@@ -32,6 +32,11 @@ import { MessagesModule } from 'primeng/messages';
 import { BillsComponent } from './pages/bills/bills.component';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { AddBillComponent } from './shared/add-bill/add-bill.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
+
 
 @NgModule({
   declarations: [
@@ -48,7 +53,8 @@ import { ToastModule } from 'primeng/toast';
     SessionMobileComponent,
     SigninMobileFormComponent,
     BaseLayoutComponent,
-    BillsComponent
+    BillsComponent,
+    AddBillComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +74,10 @@ import { ToastModule } from 'primeng/toast';
     MatProgressSpinnerModule,
     MessagesModule,
     TableModule,
-    ToastModule
+    ToastModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]

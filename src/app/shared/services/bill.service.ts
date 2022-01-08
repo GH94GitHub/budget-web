@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Console } from 'console';
 import { Observable } from 'rxjs';
 import { IBill } from '../interfaces/bill-interface';
 
@@ -11,6 +10,14 @@ import { IBill } from '../interfaces/bill-interface';
 export class BillService {
 
   constructor(private http: HttpClient) { }
+
+  createBill(token: string, bill: IBill) : Observable<any> {
+    return this.http.post('/api/user/bills', bill, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
+  }
 
   getBills(token: string) : Observable<any> {
     return this.http.get("/api/user/bills", {

@@ -1,17 +1,17 @@
 <div fxLayout="row" fxLayoutAlign="center">
   <div fxFlex="85" class="container" fxLayout="column">
     <div class="buttonGroup">
-      <button mat-raised-button>Add +</button>
+      <button mat-raised-button (click)="openAddBillDialog()">Add +</button>
     </div>
 
-      <p-table [value]="bills">
+      <p-table #pTable [value]="bills">
         <ng-template pTemplate="header">
           <tr>
             <th>Name</th>
             <th>Amount</th>
             <th>Due</th>
             <th>Repeating</th>
-            <th>Auto Payment?</th>
+            <th>Reminder?</th>
             <th></th>
           </tr>
         </ng-template>

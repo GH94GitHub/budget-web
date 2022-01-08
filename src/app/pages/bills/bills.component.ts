@@ -1,8 +1,13 @@
 import { Message } from 'primeng/api/message';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { IBill } from 'src/app/shared/interfaces/bill-interface';
 import { BillService } from 'src/app/shared/services/bill.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AddBillComponent } from 'src/app/shared/add-bill/add-bill.component';
+import { Table } from 'primeng/table';
+import { table } from 'console';
+
 
 @Component({
   selector: 'app-bills',
@@ -14,8 +19,12 @@ export class BillsComponent implements OnInit {
   bills: Array<IBill> = [];
   token: string
   msgs: Array<Message> = [];
+  @ViewChild(Table) pTable!: Table;
 
-  constructor(private billService: BillService, private cookieService: CookieService) {
+  constructor(
+    private billService: BillService,
+    private cookieService: CookieService,
+    private dialog: MatDialog) {
     this.token = this.cookieService.get('session_user');
 
     this.billService.getBills(this.token).subscribe( (res) => {
@@ -38,4 +47,21 @@ export class BillsComponent implements OnInit {
 
   }
 
+  openAddBillDialog() {
+    let dialogRef = this.dialog.open(AddBillComponent, {
+      minWidth: '450px'
+    });
+
+    dialogRef.afterClosed().subscribe( (result) => {
+      this.billService.createBill(this.token, result).subscribe( (res) => {
+        // Successfully created bill
+        this.bills.push(res.data);
+
+      },
+      // Create bill error
+      (err) => {
+      // TODO: Add error message
+    })
+    });
+  }
 }

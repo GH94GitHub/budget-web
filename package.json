@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "server": "nodemon server/app.js",
-    "localhost": "ng build && node server/app.js"
+    "localhost": "ng build && nodemon server/app.js"
   },
   "private": true,
   "dependencies": {
