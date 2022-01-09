@@ -49,19 +49,21 @@ export class BillsComponent implements OnInit {
 
   openAddBillDialog() {
     let dialogRef = this.dialog.open(AddBillComponent, {
-      minWidth: '450px'
+      minWidth: '350px'
     });
 
     dialogRef.afterClosed().subscribe( (result) => {
-      this.billService.createBill(this.token, result).subscribe( (res) => {
-        // Successfully created bill
-        this.bills.push(res.data);
+      if (result) {
+        this.billService.createBill(this.token, result).subscribe( (res) => {
+          // Successfully created bill
+          this.bills.push(res.data);
 
-      },
-      // Create bill error
-      (err) => {
-      // TODO: Add error message
-    })
+        },
+        // Create bill error
+        (err) => {
+        // TODO: Add error message
+      })
+      }
     });
   }
 }
