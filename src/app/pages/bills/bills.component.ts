@@ -4,9 +4,9 @@ import { CookieService } from 'ngx-cookie-service';
 import { IBill } from 'src/app/shared/interfaces/bill-interface';
 import { BillService } from 'src/app/shared/services/bill.service';
 import { MatDialog } from '@angular/material/dialog';
-import { AddBillComponent } from 'src/app/shared/add-bill/add-bill.component';
+import { AddBillComponent } from '../../shared/add-bill/add-bill.component';
+import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component'
 import { Table } from 'primeng/table';
-import { table } from 'console';
 
 
 @Component({
@@ -47,7 +47,10 @@ export class BillsComponent implements OnInit {
 
   }
 
-  openAddBillDialog() {
+  /**
+   * Opens dialog allowing the user to add a bill to their account
+   */
+  openAddBillDialog(): void {
     let dialogRef = this.dialog.open(AddBillComponent, {
       minWidth: '350px'
     });
@@ -65,5 +68,31 @@ export class BillsComponent implements OnInit {
       })
       }
     });
+  }
+
+  /**
+   * Deletes specified bill if user confirms the dialog
+   * @param id Id of the bill to delete
+   */
+  deleteBill(bill: IBill): void {
+    const id = bill._id || "null";
+    let dialogRef = this.dialog.open(ConfirmDeletionComponent, {
+      data: {
+        'dialogPrompt': `Are you sure you want to delete "${bill.name}"`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe( (result) => {
+      if (result) {
+        this.billService.deleteBill(this.token, id).subscribe( (res) => {
+          // TODO: Add toast to notify successful deletion
+          let billIndex = this.bills.indexOf(bill);
+          this.bills.splice(billIndex, 1)
+        },
+        (err) => {
+          // TODO: Add error message
+        })
+      }
+    })
   }
 }

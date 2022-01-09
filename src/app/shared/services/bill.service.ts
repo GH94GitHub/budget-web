@@ -35,6 +35,13 @@ export class BillService {
     })
   }
 
+  deleteBill(token: string, id: string) : Observable<any> {
+    return this.http.delete(`/api/user/bills/${id}`, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
+  }
   filterOldBills(olderBills: Array<IBill>): Array<IBill> {
     let oldBills = olderBills;
     const updatedBills = oldBills.filter( (bill: IBill) => {
