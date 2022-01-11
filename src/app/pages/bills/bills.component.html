@@ -36,7 +36,7 @@
             </ng-container>
             <td><span class="p-column-title">Reminder?</span>{{ bill.auto ? "yes" : "no" }}</td>
             <td>
-              <button mat-icon-button color="accent"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button color="accent" (click)="editBill(bill)"><mat-icon>edit</mat-icon></button>
               <button mat-icon-button color="primary" (click)="deleteBill(bill)"><mat-icon>delete</mat-icon></button>
             </td>
           </tr>

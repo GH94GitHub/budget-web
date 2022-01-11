@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddBillComponent } from '../../shared/add-bill/add-bill.component';
 import { ConfirmDeletionComponent } from '../../shared/confirm-deletion/confirm-deletion.component'
 import { Table } from 'primeng/table';
+import { EditBillComponent } from 'src/app/shared/edit-bill/edit-bill.component';
 
 
 @Component({
@@ -72,7 +73,7 @@ export class BillsComponent implements OnInit {
 
   /**
    * Deletes specified bill if user confirms the dialog
-   * @param id Id of the bill to delete
+   * @param bill Bill to delete
    */
   deleteBill(bill: IBill): void {
     const id = bill._id || "null";
@@ -91,6 +92,34 @@ export class BillsComponent implements OnInit {
         },
         (err) => {
           // TODO: Add error message
+        })
+      }
+    })
+  }
+
+  /**
+   * Edits specified bill if user saves dialog
+   * @param bill Bill to delete
+   */
+  editBill(bill: IBill): void {
+    const dialogRef = this.dialog.open(EditBillComponent, {
+      data: bill,
+      minWidth: '350px'
+    });
+
+    dialogRef.afterClosed().subscribe( (res) => {
+      console.log(`res after dialog close`);
+      console.log(res);
+      if (res) {
+        this.billService.editBill(this.token, res._id, res).subscribe( (res) => {
+
+          let index = this.bills.indexOf(bill);
+          console.log('this.bills before assignment to array')
+          console.log(this.bills[index])
+          this.bills[index] = res.data;
+        },
+        (err) => {
+        // TODO: Add error message
         })
       }
     })

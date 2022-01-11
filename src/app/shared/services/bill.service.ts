@@ -42,6 +42,15 @@ export class BillService {
       }
     })
   }
+
+  editBill(token: string, id: string, bill: IBill) : Observable<any> {
+    return this.http.put(`/api/user/bills/${id}`, bill, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    })
+  }
+
   filterOldBills(olderBills: Array<IBill>): Array<IBill> {
     let oldBills = olderBills;
     const updatedBills = oldBills.filter( (bill: IBill) => {

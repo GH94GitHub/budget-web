@@ -37,6 +37,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { ConfirmDeletionComponent } from './shared/confirm-deletion/confirm-deletion.component';
+import { EditBillComponent } from './shared/edit-bill/edit-bill.component';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { ConfirmDeletionComponent } from './shared/confirm-deletion/confirm-dele
     BaseLayoutComponent,
     BillsComponent,
     AddBillComponent,
-    ConfirmDeletionComponent
+    ConfirmDeletionComponent,
+    EditBillComponent
   ],
   imports: [
     BrowserModule,
