@@ -1,0 +1,8 @@
+@import "../../variables.scss";
+
+mat-toolbar {
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+  background-color: $color-secondary-2;
+}

@@ -1,7 +1,5 @@
-<mat-toolbar fxLayoutAlign="space-between">
-  <span fxLayoutAlign="none center">Track Budget</span>
-
-    <button mat-button [matMenuTriggerFor]="dropdown">
+  <mat-toolbar>
+    <button fxHide [fxShow.lt-sm]="true" mat-button [matMenuTriggerFor]="dropdown">
       <mat-icon>menu</mat-icon>
     </button>
     <mat-menu #dropdown="matMenu" xPosition="before">
@@ -9,6 +7,13 @@
       <button mat-menu-item routerLink="/bills">Manage Bills</button>
       <button mat-menu-item (click)="signout()">Sign Out</button>
     </mat-menu>
+    <span fxHide [fxShow.gt-xs]="true">
+      <button fxFlexOffset.gt-sm="100px" mat-button>Overview</button>
+      <button mat-button>Bills</button>
+      <button mat-button>Bills</button>
+    </span>
 
-</mat-toolbar>
-<router-outlet></router-outlet>
+    <span style="margin-left: auto;" fxLayoutAlign="none center">Budget Manager</span>
+  </mat-toolbar>
+  <router-outlet></router-outlet>
+
