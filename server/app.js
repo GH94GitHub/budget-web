@@ -20,7 +20,8 @@ app.use('/', express.static(path.join(__dirname, '../dist/budget-web')));
  */
 const port = process.env.PORT || 3000;
 
-const conn = 'mongodb+srv://admin:IdC3QeTdW3kevaw2@cluster0.yiwmb.mongodb.net/budget?retryWrites=true&w=majority'; //Mongoose connection string
+
+const conn = 'mongodb+srv://admin:IdC3QeTdW3kevaw2@cluster0.yiwmb.mongodb.net/budget?retryWrites=true&w=majority';
 
 /**
  * Database connection
