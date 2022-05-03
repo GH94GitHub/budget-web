@@ -13,6 +13,7 @@ import { SigninMobileComponent } from './pages/signin-mobile/signin-mobile.compo
 import { SessionMobileComponent } from './shared/session-mobile/session-mobile.component';
 import { SigninMobileFormComponent } from './pages/signin-mobile-form/signin-mobile-form.component';
 import { BaseLayoutComponent } from './shared/base-layout/base-layout.component';
+import { BillsComponent } from './pages/bills/bills.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: '',
         component: HomeComponent
+      },
+      {
+        path: 'bills',
+        component: BillsComponent
       },
       {
         path: 'budget',
@@ -38,18 +43,6 @@ const routes: Routes = [
     ],
     canActivate: [AuthGuard]
   },
-  // ----- Mobile page routing
-  // {
-  //   path: "mobile",
-  //   component: MobileLayoutComponent,
-  //   children: [
-  //     {
-  //       path: "home",
-  //       component: MobileHomeComponent
-  //     }
-  //   ],
-  //   canActivate: [MobileGuard]
-  // },
   {
     path: 'session',
     component: SessionComponent,

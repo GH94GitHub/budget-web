@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path = require('path');
-
+const tokenParser = require("./middleware/tokenParser");
 // APIs
 const usersAPI = require("./routes/user-api");
 const sessionAPI = require("./routes/session-api");
 
 let app = express();
 app.use(bodyParser.json());
+
 app.use(bodyParser.urlencoded({'extended':true}));
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '../dist/budget-web')));
@@ -39,7 +40,7 @@ mongoose.connect(conn, {
 /**
  * APIs
  */
-app.use('/api/users', usersAPI)
+app.use('/api/user', tokenParser, usersAPI)
 app.use('/api/session', sessionAPI)
 
 

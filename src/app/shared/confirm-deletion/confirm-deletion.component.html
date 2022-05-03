@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Delete?</h2>
+<mat-dialog-content>
+  <p>{{ data.dialogPrompt }}</p>
+  <small>WARNING: This cannot be undone.</small>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between">
+  <button mat-raised-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button (click)="confirm()">Delete</button>
+</mat-dialog-actions>

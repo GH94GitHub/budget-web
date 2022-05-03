@@ -1,26 +1,23 @@
-const decode = require("../utils/authentication");
+const {verifyToken} = require("../utils/authentication");
+const ErrorResponse = require("../services/ErrorResponse");
 
 module.exports = (req, res, next) => {
   try {
-    if (!req.headers.authorization) {
-      return res.status(401).send({
-        message: "You do not have access."
-      })
-    }
-    const decodedToken = decode(req.headers.authorization);
-    const userRole = decodedToken.role;
+    const userRole = req.app.locals.user.role;
 
-    if (userRole && userRole !== 0) {
-      throw 'You do not have access to admin rights';
+    // User is not admin
+    if (userRole !== 0) {
+      const errorResponse = new ErrorResponse(401, "You do not have permission", null);
+      return res.status(errorResponse.httpCode).json(errorResponse.toObject());
     }
+    // Admin user
     else {
       return next();
     }
   }
   catch(e) {
-    res.status(401).send({
-      message: e,
-      error: e.message
-    })
+    console.log(e);
+    const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+    return res.status(errorResponse.httpCode).json(errorResponse.toObject());
   }
 }

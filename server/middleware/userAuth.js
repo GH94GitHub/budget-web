@@ -1,13 +1,13 @@
-const decode = require('../utils/authentication');
+const {verifyToken} = require('../utils/authentication');
+const ErrorResponse = require('../services/ErrorResponse');
 
 module.exports = (req, res, next) => {
   try{
     if (!req.headers.authorization) {
-      return res.status(401).send({
-        message: "You do not have access."
-      })
+      const errorResponse = new ErrorResponse(401, "You do not have permission", null);
+      return res.status(errorResponse.httpCode).json(errorResponse.toObject());
     }
-    const decodedToken = decode(req.headers.authorization)
+    const decodedToken = verifyToken(req.headers.authorization)
     const userName = decodedToken.userName;
 
     if (decodedToken.role === 0) {
@@ -20,14 +20,13 @@ module.exports = (req, res, next) => {
         return next();
       }
       else {
-        throw 'You do not have access.';
+        const errorResponse = new ErrorResponse(401, "You do not have permission", null);
+        return res.status(errorResponse.httpCode).json(errorResponse);
       }
   }
   catch(e) {
     console.log(e);
-    res.status(401).send({
-      message: e,
-      error: e.message
-    });
+    const errorResponse = new ErrorResponse(500, "Internal Server Error", null);
+    return res.status(errorResponse.httpCode).json(errorResponse);
   }
 };

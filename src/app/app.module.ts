@@ -27,6 +27,17 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BaseLayoutComponent } from './shared/base-layout/base-layout.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MessagesModule } from 'primeng/messages';
+import { BillsComponent } from './pages/bills/bills.component';
+import { TableModule } from 'primeng/table';
+import { ToastModule } from 'primeng/toast';
+import { AddBillComponent } from './shared/add-bill/add-bill.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
+import { ConfirmDeletionComponent } from './shared/confirm-deletion/confirm-deletion.component';
+import { EditBillComponent } from './shared/edit-bill/edit-bill.component';
 
 
 @NgModule({
@@ -43,7 +54,11 @@ import { MatIconModule } from '@angular/material/icon';
     SigninMobileComponent,
     SessionMobileComponent,
     SigninMobileFormComponent,
-    BaseLayoutComponent
+    BaseLayoutComponent,
+    BillsComponent,
+    AddBillComponent,
+    ConfirmDeletionComponent,
+    EditBillComponent
   ],
   imports: [
     BrowserModule,
@@ -59,7 +74,14 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule,
     MatToolbarModule,
     MatMenuModule,
-    MatIconModule
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MessagesModule,
+    TableModule,
+    ToastModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]

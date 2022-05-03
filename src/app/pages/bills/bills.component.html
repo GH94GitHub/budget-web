@@ -1,0 +1,46 @@
+<div fxLayout="row" fxLayoutAlign="center">
+  <div fxFlex="85" fxFlex.lt-md="100" class="container" fxLayout="column">
+    <div class="buttonGroup">
+      <button mat-raised-button (click)="openAddBillDialog()">Add +</button>
+    </div>
+
+      <p-table #pTable [value]="bills" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Due</th>
+            <th>Repeating</th>
+            <th>Reminder?</th>
+            <th>Functions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-bill>
+          <tr>
+            <td><span class="p-column-title">Name</span>{{ bill.name }}</td>
+            <td><span class="p-column-title">Amount</span>{{ bill.amount | currency}}</td>
+            <td><span class="p-column-title">Due</span>{{ bill.dueDate | date}}</td>
+            <ng-container [ngSwitch]="bill.repeats">
+              <ng-container *ngSwitchCase="null">
+                <td><span class="p-column-title">Repeating</span>Never</td>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'mo'">
+                <td><span class="p-column-title">Repeating</span>Monthly</td>
+              </ng-container>
+
+              <ng-container *ngSwitchDefault>
+                <td><span class="p-column-title">Repeating</span>Every {{ bill.repeats }} days</td>
+              </ng-container>
+
+            </ng-container>
+            <td><span class="p-column-title">Reminder?</span>{{ bill.auto ? "yes" : "no" }}</td>
+            <td>
+              <button mat-icon-button color="accent" (click)="editBill(bill)"><mat-icon>edit</mat-icon></button>
+              <button mat-icon-button color="primary" (click)="deleteBill(bill)"><mat-icon>delete</mat-icon></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+  </div>
+</div>
